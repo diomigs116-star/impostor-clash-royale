@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,50 +13,92 @@
 </head>
 <body>
   <div class="card">
-    <h2>Juego del Impostor - Clash Royale</h2>
-    <p>Presiona el botón para ver tu rol.</p>
+    <h2>Juego del Impostor - Clash Royale</h2><label>Jugadores:</label>
+<input id="numPlayers" type="number" min="1" value="2" />
 
-    <button id="reveal">Ver mi carta</button>
-    <button id="reset">Reiniciar</button>
+<label>Impostores:</label>
+<input id="numImpostors" type="number" min="1" value="1" />
 
-    <h3 id="result"></h3>
-  </div>
+<button id="setup">Iniciar partida</button>
+<hr>
 
-  <script>
-    const cartas = [
-      "Valkyria", "Gigante", "Mago", "Bruja", "Montapuercos", "Verdugo", "Esqueletos", "Gólem", "Príncipe", "Caballero"
-    ];
+<p id="playerInfo"></p>
+<button id="reveal" disabled>Ver mi carta</button>
+<button id="next" disabled>Siguiente jugador</button>
+<button id="reset">Reiniciar partida</button>
 
-    let rolesAsignados = false;
-    let esImpostor = false;
-    let cartaElegida = "";
+<h3 id="result"></h3>
 
-    function asignarRol() {
-      if (rolesAsignados) return;
+  </div>  <script>
+    const cartas = ["Esqueletos", "Valkyria", "Gigante", "Mago", "Bruja", "Montapuercos", "Verdugo", "Gólem", "Príncipe", "Caballero"];
 
-      esImpostor = Math.random() < 0.2;
-      cartaElegida = cartas[Math.floor(Math.random() * cartas.length)];
+    let roles = [];
+    let currentPlayer = 0;
 
-      rolesAsignados = true;
+    document.getElementById("setup").onclick = function() {
+      const n = parseInt(document.getElementById("numPlayers").value);
+      const impostors = parseInt(document.getElementById("numImpostors").value);
+
+      roles = [];
+
+      // Crear lista de roles
+      for (let i = 0; i < n; i++) roles.push("CARD");
+      for (let i = 0; i < impostors; i++) roles[i] = "IMPOSTOR";
+
+      // Mezclar
+      for (let i = roles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [roles[i], roles[j]] = [roles[j], roles[i]];
+      }
+
+      // Elegir UNA carta para toda la partida
+      gameCard = cartas[Math.floor(Math.random() * cartas.length)];
+
+      currentPlayer = 0;
+      updatePlayerInfo();
+
+      document.getElementById("reveal").disabled = false;
+      document.getElementById("next").disabled = true;
+    };
+
+    function updatePlayerInfo() {
+      document.getElementById("playerInfo").textContent = "Jugador " + (currentPlayer + 1);
     }
 
     document.getElementById("reveal").onclick = function() {
-      asignarRol();
       const result = document.getElementById("result");
-
-      if (esImpostor) {
+      if (roles[currentPlayer] === "IMPOSTOR") {
         result.textContent = "ERES EL IMPOSTOR";
       } else {
-        result.textContent = "Tu carta es: " + cartaElegida;
+        result.textContent = "Tu carta es: " + gameCard;
       }
+
+      document.getElementById("next").disabled = false;
+      document.getElementById("reveal").disabled = true;
+    };
+
+    document.getElementById("next").onclick = function() {
+      currentPlayer++;
+      document.getElementById("result").textContent = "";
+
+      if (currentPlayer >= roles.length) {
+        document.getElementById("playerInfo").textContent = "Todos los jugadores ya vieron su rol.";
+        document.getElementById("next").disabled = true;
+        return;
+      }
+
+      updatePlayerInfo();
+      document.getElementById("reveal").disabled = false;
+      document.getElementById("next").disabled = true;
     };
 
     document.getElementById("reset").onclick = function() {
-      rolesAsignados = false;
-      esImpostor = false;
-      cartaElegida = "";
+      roles = [];
+      currentPlayer = 0;
       document.getElementById("result").textContent = "";
+      document.getElementById("playerInfo").textContent = "";
+      document.getElementById("reveal").disabled = true;
+      document.getElementById("next").disabled = true;
     };
-  </script>
-</body>
+  </script></body>
 </html>
