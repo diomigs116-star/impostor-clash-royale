@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impostor Clash Royale</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.15); max-width: 400px; margin: auto; }
+    button { padding: 10px 20px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 10px; }
+    #reveal { background: #4CAF50; color: white; }
+    #reset { background: #d9534f; color: white; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Juego del Impostor - Clash Royale</h2>
+    <p>Presiona el botón para ver tu rol.</p>
+
+    <button id="reveal">Ver mi carta</button>
+    <button id="reset">Reiniciar</button>
+
+    <h3 id="result"></h3>
+  </div>
+
+  <script>
+    const cartas = [
+      "Valkyria", "Gigante", "Mago", "Bruja", "Montapuercos", "Verdugo", "Esqueletos", "Gólem", "Príncipe", "Caballero"
+    ];
+
+    let rolesAsignados = false;
+    let esImpostor = false;
+    let cartaElegida = "";
+
+    function asignarRol() {
+      if (rolesAsignados) return;
+
+      esImpostor = Math.random() < 0.2;
+      cartaElegida = cartas[Math.floor(Math.random() * cartas.length)];
+
+      rolesAsignados = true;
+    }
+
+    document.getElementById("reveal").onclick = function() {
+      asignarRol();
+      const result = document.getElementById("result");
+
+      if (esImpostor) {
+        result.textContent = "ERES EL IMPOSTOR";
+      } else {
+        result.textContent = "Tu carta es: " + cartaElegida;
+      }
+    };
+
+    document.getElementById("reset").onclick = function() {
+      rolesAsignados = false;
+      esImpostor = false;
+      cartaElegida = "";
+      document.getElementById("result").textContent = "";
+    };
+  </script>
+</body>
+</html>
