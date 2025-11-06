@@ -1,13 +1,7 @@
 // Lista de cartas disponibles
 const cartas = [
   "Esqueleto",
-  "Mago",
-  "Gigante",
-  "Montapuerco",
-  "Caballero",
-  "Arquera",
-  "Duende",
-  "Curandera"
+  "mago"
 ];
 
 // Variable global para guardar la carta de la partida
