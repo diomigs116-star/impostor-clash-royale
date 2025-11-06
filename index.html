@@ -1,71 +1,104 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impostor Clash Royale</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #1e1e1e;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-
-        h1 {
-            margin-bottom: 30px;
-        }
-
-        #carta {
-            margin: 40px auto;
-            padding: 20px;
-            width: 250px;
-            font-size: 32px;
-            border: 3px solid white;
-            border-radius: 15px;
-            background: #333;
-        }
-
-        button {
-            padding: 12px 20px;
-            margin: 10px;
-            font-size: 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            background: #4c8bff;
-            color: white;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            background: #3067d6;
-        }
-
-        .footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #888;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impostor Clash Royale</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.15); max-width: 400px; margin: auto; }
+    button { padding: 10px 20px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 10px; }
+    #reveal { background: #4CAF50; color: white; }
+    #reset { background: #d9534f; color: white; }
+  </style>
 </head>
 <body>
+  <div class="card">
+    <h2>Juego del Impostor - Clash Royale</h2><label>Jugadores:</label>
+<input id="numPlayers" type="number" min="1" value="2" />
 
-    <h1>Juego del Impostor - Clash Royale</h1>
+<label>Impostores:</label>
+<input id="numImpostors" type="number" min="1" value="1" />
 
-    <div id="carta">—</div>
+<button id="setup">Iniciar partida</button>
+<hr>
 
-    <button onclick="iniciarPartida()">Iniciar partida</button>
-    <button onclick="verMiCarta()">Ver mi carta</button>
-    <button onclick="siguienteJugador()">Siguiente jugador</button>
-    <button onclick="reiniciarPartida()">Reiniciar</button>
+<p id="playerInfo"></p>
+<button id="reveal" disabled>Ver mi carta</button>
+<button id="next" disabled>Siguiente jugador</button>
+<button id="reset">Reiniciar partida</button>
 
-    <!-- AQUÍ se carga el archivo del juego -->
-    <script src="script.js"></script>
+<h3 id="result"></h3>
 
-    <div class="footer">Hecho por Dioni 😎</div>
+  </div>  <script>
+    const cartas = ["Esqueletos", "Valkyria", "Gigante", "Mago", "Bruja", "Montapuercos", "Verdugo", "Gólem", "Príncipe", "Caballero"];
 
-</body>
-</html>    
+    let roles = [];
+    let currentPlayer = 0;
+
+    document.getElementById("setup").onclick = function() {
+      const n = parseInt(document.getElementById("numPlayers").value);
+      const impostors = parseInt(document.getElementById("numImpostors").value);
+
+      roles = [];
+
+      // Crear lista de roles
+      for (let i = 0; i < n; i++) roles.push("CARD");
+      for (let i = 0; i < impostors; i++) roles[i] = "IMPOSTOR";
+
+      // Mezclar
+      for (let i = roles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [roles[i], roles[j]] = [roles[j], roles[i]];
+      }
+
+      // Elegir UNA carta para toda la partida
+      gameCard = cartas[Math.floor(Math.random() * cartas.length)];
+
+      currentPlayer = 0;
+      updatePlayerInfo();
+
+      document.getElementById("reveal").disabled = false;
+      document.getElementById("next").disabled = true;
+    };
+
+    function updatePlayerInfo() {
+      document.getElementById("playerInfo").textContent = "Jugador " + (currentPlayer + 1);
+    }
+
+    document.getElementById("reveal").onclick = function() {
+      const result = document.getElementById("result");
+      if (roles[currentPlayer] === "IMPOSTOR") {
+        result.textContent = "ERES EL IMPOSTOR";
+      } else {
+        result.textContent = "Tu carta es: " + gameCard;
+      }
+
+      document.getElementById("next").disabled = false;
+      document.getElementById("reveal").disabled = true;
+    };
+
+    document.getElementById("next").onclick = function() {
+      currentPlayer++;
+      document.getElementById("result").textContent = "";
+
+      if (currentPlayer >= roles.length) {
+        document.getElementById("playerInfo").textContent = "Todos los jugadores ya vieron su rol.";
+        document.getElementById("next").disabled = true;
+        return;
+      }
+
+      updatePlayerInfo();
+      document.getElementById("reveal").disabled = false;
+      document.getElementById("next").disabled = true;
+    };
+
+    document.getElementById("reset").onclick = function() {
+      roles = [];
+      currentPlayer = 0;
+      document.getElementById("result").textContent = "";
+      document.getElementById("playerInfo").textContent = "";
+      document.getElementById("reveal").disabled = true;
+      document.getElementById("next").disabled = true;
+    };
+  </script></body>
+</html>
