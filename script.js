@@ -1,7 +1,13 @@
 // Lista de cartas disponibles
 const cartas = [
-  "Esqueleto",
-  "mago"
+    "Esqueleto",
+    "Mago",
+    "Gigante",
+    "Montapuerco",
+    "Caballero",
+    "Arquera",
+    "Duende",
+    "Curandera"
 ];
 
 // Variable global para guardar la carta de la partida
@@ -9,45 +15,44 @@ let cartaPartida = null;
 
 // Iniciar partida -> genera UNA sola carta
 function iniciarPartida() {
-  // 25% de probabilidades de impostor
-  const esImpostor = Math.random() < 0.25;
+    const esImpostor = Math.random() < 0.25;
 
-  if (esImpostor) {
-    cartaPartida = "IMPOSTOR";
-  } else {
-    const randomIndex = Math.floor(Math.random() * cartas.length);
-    cartaPartida = cartas[randomIndex];
-  }
+    if (esImpostor) {
+        cartaPartida = "IMPOSTOR";
+    } else {
+        const randomIndex = Math.floor(Math.random() * cartas.length);
+        cartaPartida = cartas[randomIndex];
+    }
 
-  mostrarCarta(cartaPartida);
+    mostrarCarta(cartaPartida);
 }
 
 // Mostrar la carta del jugador actual
 function verMiCarta() {
-  if (cartaPartida === null) {
-    alert("Primero iniciá la partida.");
-    return;
-  }
-  mostrarCarta(cartaPartida);
+    if (cartaPartida === null) {
+        alert("Primero iniciá la partida.");
+        return;
+    }
+    mostrarCarta(cartaPartida);
 }
 
 // Solo vuelve a mostrar la misma carta
 function siguienteJugador() {
-  if (cartaPartida === null) {
-    alert("Primero iniciá la partida.");
-    return;
-  }
-  mostrarCarta(cartaPartida);
+    if (cartaPartida === null) {
+        alert("Primero iniciá la partida.");
+        return;
+    }
+    mostrarCarta(cartaPartida);
 }
 
 // Reinicia todo
 function reiniciarPartida() {
-  cartaPartida = null;
-  mostrarCarta("—");
+    cartaPartida = null;
+    mostrarCarta("—");
 }
 
 // Actualiza el texto de la carta en pantalla
 function mostrarCarta(texto) {
-  const carta = document.getElementById("carta");
-  carta.textContent = texto;
+    const carta = document.getElementById("carta");
+    carta.textContent = texto;
 }
